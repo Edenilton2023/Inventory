@@ -44,3 +44,33 @@ CREATE TABLE itens_estoque (
     nome VARCHAR(255) NOT NULL,
     quantidade INT NOT NULL
 );
+
+
+
+
+
+MYSQLDATABASE
+*******
+
+
+
+MYSQLHOST
+*******
+
+
+
+MYSQLPASSWORD
+*******
+
+
+
+MYSQLPORT
+*******
+
+
+
+MYSQLUSER
+*******
+
+
+
