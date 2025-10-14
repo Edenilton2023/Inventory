@@ -4,7 +4,13 @@
       import ItemEstoque from "./components/ItemEstoque"; 
       import './index.css'; // Importe o CSS principal do Tailwind
 
-      const API_URL = 'http://localhost:3001/api/itens';
+  // A URL muda no deploy. Você deve usar uma variável de ambiente ou o URL fixo.
+// Por enquanto, usaremos uma string vazia (será substituída no deploy)
+// Em um deploy real, você passaria isso via variável de ambiente do Vite/Railway.
+
+// POR ENQUANTO, DEIXE ASSIM, MAS ESTE VALOR SERÁ O CAUSADOR DO ERRO APÓS O DEPLOY.
+const API_URL = 'http://localhost:3001/api/itens';
+// VOCÊ TERÁ QUE MUDAR ISSO PARA: 'https://seubackend.up.railway.app/api/itens'
 
       function App() {
           const [itens, setItens] = useState([]);

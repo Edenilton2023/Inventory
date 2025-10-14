@@ -2,17 +2,20 @@
 import express from 'express'; // Framework para criar o servidor web e definir as rotas
 import cors from 'cors';     // Middleware para segurança, permite requisições entre diferentes portas (Front-end e Back-end)
 import mysql from 'mysql2';  // Driver para se comunicar com o MySQL
+import dotenv from 'dotenv'; // Carrega variáveis de ambiente de um arquivo .env
 
+dotenv.config(); // Carrega as variáveis do arquivo .env para process.env   
 const app = express(); // Inicializa o aplicativo Express
 const PORT = 3001;     // Define a porta onde o Back-end irá rodar
 
-// --- Configuração da Conexão com o MySQL ---
+// --- Configuração da Conexão com o MySQL (USANDO VARIÁVEIS DE AMBIENTE) ---
 const db = mysql.createConnection({
-    // Informações de acesso ao seu banco de dados local
-    host: 'localhost', 
-    user: 'root', 
-    password: 'AdminDev', // <-- SUBSTITUA PELA SUA SENHA!
-    database: 'estoque'   // <-- NOME DO SEU BANCO DE DADOS
+    // Railway/Render injetará estas variáveis automaticamente no deploy
+    host: process.env.MYSQLHOST, 
+    user: process.env.MYSQLUSER, 
+    password: process.env.MYSQLPASSWORD, 
+    database: process.env.MYSQLDATABASE,
+    port: process.env.MYSQLPORT 
 });
 
 // Testa a conexão ao iniciar o servidor Node
