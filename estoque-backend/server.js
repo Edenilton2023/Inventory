@@ -1,25 +1,26 @@
-// ... (imports e dotenv.config())
+// import cors from 'cors'; 
+// ...
 
-const app = express();
-const PORT = process.env.PORT || 3001; // Railway define a porta em produção
-// ... (db.connect e lógica de conexão)
+// --- Configuração de Middlewares (USE ESTA SOLUÇÃO) ---
+const allowedOrigins = [
+  'https://react-frontend-production-fba8.up.railway.app', // Domínio do seu Front-end
+  'http://localhost:5173' // Para desenvolvimento local
+  // Adicione a URL base do Back-end também, caso esteja usando uma rota relativa.
+];
 
-// --- Configuração de Middlewares (AQUI ESTÁ A CORREÇÃO DO CORS) ---
-
-// Remove a linha 'app.use(cors());' e usa a configuração manual para garantir
-// que o servidor aceite requisições do Front-end público do Railway.
-app.use(function(req, res, next) {
-  // Configura a resposta para aceitar requisições de QUALQUER origem pública (*).
-  res.header('Access-Control-Allow-Origin', '*'); 
-  
-  // Especifica quais métodos HTTP (CRUD) são permitidos.
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  
-  // Especifica os cabeçalhos que o cliente pode enviar.
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  
-  next();
-});
+app.use(cors({
+    origin: function(origin, callback){
+        // Permite requisições sem 'origin' (como apps ou Postman)
+        if(!origin) return callback(null, true); 
+        // Permite se a origem estiver na lista
+        if(allowedOrigins.indexOf(origin) === -1){
+            const msg = 'A política CORS para esta origem não permite acesso.';
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    },
+    credentials: true
+}));
 
 app.use(express.json()); // Mantém o suporte a JSON
 // --- FIM DA CORREÇÃO CORS ---
