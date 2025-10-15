@@ -9,7 +9,7 @@
 // Em um deploy real, você passaria isso via variável de ambiente do Vite/Railway.
 
 // POR ENQUANTO, DEIXE ASSIM, MAS ESTE VALOR SERÁ O CAUSADOR DO ERRO APÓS O DEPLOY.
-const API_URL = 'https://nodejs-production-ff9d1.up.railway.app/api/itens';
+const API_URL = 'https://nodejs-production-ff9d1.up.railway.app';
 // VOCÊ TERÁ QUE MUDAR ISSO PARA: 'https://seubackend.up.railway.app/api/itens'
 
       function App() {
