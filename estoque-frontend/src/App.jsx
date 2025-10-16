@@ -1,137 +1,117 @@
-      import React, { useState, useEffect } from 'react';
-      import axios from 'axios';
-      import FormAdicionar from "./components/FormAdicionar"; 
-      import ItemEstoque from "./components/ItemEstoque"; 
-      import './index.css'; // Importe o CSS principal do Tailwind
+// Importa bibliotecas e componentes essenciais
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import FormAdicionar from "./components/FormAdicionar"; 
+import ItemEstoque from "./components/ItemEstoque"; 
+import './index.css'; 
 
-  // A URL muda no deploy. Você deve usar uma variável de ambiente ou o URL fixo.
-// Por enquanto, usaremos uma string vazia (será substituída no deploy)
-// Em um deploy real, você passaria isso via variável de ambiente do Vite/Railway.
+// 🚨 URL BASE DA API EM PRODUÇÃO: Você precisa substituir este valor!
+// Exemplo: 'https://nodejs-production-67f4.up.railway.app'
+const API_BASE_URL = 'https://[DOMINIO_DO_SEU_BACKEND_AQUI]'; 
 
-// POR ENQUANTO, DEIXE ASSIM, MAS ESTE VALOR SERÁ O CAUSADOR DO ERRO APÓS O DEPLOY.
-// Defina apenas o DOMÍNIO BASE sem a rota final (/api/itens)
-const API_BASE_URL = 'https://react-frontend-production-fba8.up.railway.app';
 
 function App() {
-    // ... (restante do código)
+    // Hooks useState para gerenciar o estado global
+    const [itens, setItens] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    // Função para buscar os dados (READ)
+    // Função para buscar dados (READ)
     const fetchItens = () => {
         setLoading(true);
-        // Use a URL base + a rota GET: /api/itens
+        // Usa a URL base + a rota GET
         axios.get(`${API_BASE_URL}/api/itens`) 
             .then(response => {
-                // ... (restante da função)
+                setItens(response.data);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error("Erro ao buscar itens. Verifique o Back-end e o CORS:", error);
+                setLoading(false);
             });
     };
 
+    // Hook useEffect para carregar dados na inicialização
+    useEffect(() => {
+        fetchItens();
+    }, []);
+
     // Função para Adicionar Item (CREATE)
     const adicionarItem = (nome, quantidade) => {
-        // Use a URL base + a rota POST: /api/itens
+        // Envia POST para a rota /api/itens
         axios.post(`${API_BASE_URL}/api/itens`, { nome, quantidade }) 
             .then(() => fetchItens())
-            // ... (restante da função)
+            .catch(error => alert(`Erro ao adicionar: ${error.message}`));
     };
 
-    // ... (Faça o mesmo ajuste nas funções REMOVER e ATUALIZAR)
-    // ... (Ex: axios.delete(`${API_BASE_URL}/api/itens/${id}`))
+    // Função para Remover Item (DELETE)
+    const removerItem = (id, nome) => {
+        if (!window.confirm(`Remover "${nome}"?`)) return;
+        // Envia DELETE para a rota /api/itens/:id
+        axios.delete(`${API_BASE_URL}/api/itens/${id}`)
+            .then(() => fetchItens())
+            .catch(error => alert(`Erro ao remover: ${error.message}`));
+    };
 
-    // ... (Restante do código)
+    // Função para Atualizar Quantidade (UPDATE)
+    const updateQuantidade = (id, nome, novaQuantidade) => {
+        if (novaQuantidade < 0) return alert("Quantidade não pode ser negativa.");
+        
+        // Envia PUT para a rota /api/itens/:id
+        axios.put(`${API_BASE_URL}/api/itens/${id}`, { quantidade: novaQuantidade })
+            .then(() => {
+                // Atualização Otimista
+                setItens(prevItens => prevItens.map(item => 
+                    item.id === id ? { ...item, quantidade: novaQuantidade } : item
+                ));
+            })
+            .catch(error => {
+                console.error('Erro ao atualizar:', error);
+                alert(`Erro ao atualizar quantidade do item ${nome}!`);
+                fetchItens(); 
+            });
+    };
+
+
+    if (loading) {
+        return <div className="flex justify-center items-center h-screen text-xl font-semibold">Carregando estoque...</div>;
+    }
+    
+    return (
+        <div className="max-w-4xl mx-auto p-4 bg-gray-100 min-h-screen">
+            <h1 className="text-4xl font-extrabold text-center text-gray-800 mt-8 mb-8">
+                SISTEMA DE ESTOQUE
+            </h1>
+            
+            <FormAdicionar onAdicionar={adicionarItem} />
+
+            {itens.length === 0 ? (
+                <p className="text-center text-gray-600">Estoque vazio. Adicione seu primeiro item!</p>
+            ) : (
+                <div className="bg-white rounded-xl shadow-xl overflow-hidden">
+                    <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-blue-600 text-white">
+                            <tr>
+                                <th className="p-4 text-left text-sm font-medium">ID</th>
+                                <th className="p-4 text-left text-sm font-medium">Nome</th>
+                                <th className="p-4 text-center text-sm font-medium">Quantidade</th>
+                                <th className="p-4 text-center text-sm font-medium">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                            {itens.map(item => (
+                                <ItemEstoque 
+                                    key={item.id} 
+                                    item={item}
+                                    onUpdate={updateQuantidade} 
+                                    onRemove={removerItem} 
+                                />
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+        </div>
+    );
 }
-// VOCÊ TERÁ QUE MUDAR ISSO PARA: 'https://seubackend.up.railway.app/api/itens'
 
-      function App() {
-          const [itens, setItens] = useState([]);
-          const [loading, setLoading] = useState(true);
-
-          const fetchItens = () => {
-              setLoading(true);
-              axios.get(API_URL)
-                  .then(response => {
-                      setItens(response.data);
-                      setLoading(false);
-                  })
-                  .catch(error => {
-                      console.error("Erro ao buscar itens. O Back-end está rodando?", error);
-                      setLoading(false);
-                  });
-          };
-
-          useEffect(() => {
-              fetchItens();
-          }, []);
-
-          const adicionarItem = (nome, quantidade) => {
-              axios.post(API_URL, { nome, quantidade })
-                  .then(() => fetchItens())
-                  .catch(error => alert(`Erro ao adicionar: ${error.message}`));
-          };
-
-          const removerItem = (id, nome) => {
-              if (!window.confirm(`Remover "${nome}"?`)) return;
-              axios.delete(`${API_URL}/${id}`)
-                  .then(() => fetchItens())
-                  .catch(error => alert(`Erro ao remover: ${error.message}`));
-          };
-
-          const updateQuantidade = (id, nome, novaQuantidade) => {
-              if (novaQuantidade < 0) return alert("Quantidade não pode ser negativa.");
-              
-              axios.put(`${API_URL}/${id}`, { quantidade: novaQuantidade })
-                  .then(() => {
-                      // Atualização otimista: atualiza o estado localmente sem recarregar tudo
-                      setItens(prevItens => prevItens.map(item => 
-                          item.id === id ? { ...item, quantidade: novaQuantidade } : item
-                      ));
-                  })
-                  .catch(error => {
-                      console.error('Erro ao atualizar:', error);
-                      alert(`Erro ao atualizar quantidade do item ${nome}!`);
-                      fetchItens(); 
-                  });
-          };
-
-
-          if (loading) {
-              return <div className="flex justify-center items-center h-screen text-xl font-semibold">Carregando estoque...</div>;
-          }
-          
-          return (
-              <div className="max-w-4xl mx-auto p-4 bg-gray-100 min-h-screen">
-                  <h1 className="text-4xl font-extrabold text-center text-gray-800 mt-8 mb-8">
-                      SISTEMA DE ESTOQUE
-                  </h1>
-                  
-                  <FormAdicionar onAdicionar={adicionarItem} />
-
-                  {itens.length === 0 ? (
-                      <p className="text-center text-gray-600">Estoque vazio. Adicione seu primeiro item!</p>
-                  ) : (
-                      <div className="bg-white rounded-xl shadow-xl overflow-hidden">
-                          <table className="min-w-full divide-y divide-gray-200">
-                              <thead className="bg-blue-600 text-white">
-                                  <tr>
-                                      <th className="p-4 text-left text-sm font-medium">ID</th>
-                                      <th className="p-4 text-left text-sm font-medium">Nome</th>
-                                      <th className="p-4 text-center text-sm font-medium">Quantidade</th>
-                                      <th className="p-4 text-center text-sm font-medium">Ações</th>
-                                  </tr>
-                              </thead>
-                              <tbody className="bg-white divide-y divide-gray-200">
-                                  {itens.map(item => (
-                                      <ItemEstoque 
-                                          key={item.id} 
-                                          item={item}
-                                          onUpdate={updateQuantidade} 
-                                          onRemove={removerItem} 
-                                      />
-                                  ))}
-                              </tbody>
-                          </table>
-                      </div>
-                  )}
-              </div>
-          );
-      }
-
-      export default App;
+export default App;
