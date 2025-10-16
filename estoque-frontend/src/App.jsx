@@ -9,7 +9,35 @@
 // Em um deploy real, você passaria isso via variável de ambiente do Vite/Railway.
 
 // POR ENQUANTO, DEIXE ASSIM, MAS ESTE VALOR SERÁ O CAUSADOR DO ERRO APÓS O DEPLOY.
-const API_URL = 'https://nodejs-production-ff9d1.up.railway.app';
+// Defina apenas o DOMÍNIO BASE sem a rota final (/api/itens)
+const API_BASE_URL = 'https://react-frontend-production-fba8.up.railway.app';
+
+function App() {
+    // ... (restante do código)
+
+    // Função para buscar os dados (READ)
+    const fetchItens = () => {
+        setLoading(true);
+        // Use a URL base + a rota GET: /api/itens
+        axios.get(`${API_BASE_URL}/api/itens`) 
+            .then(response => {
+                // ... (restante da função)
+            });
+    };
+
+    // Função para Adicionar Item (CREATE)
+    const adicionarItem = (nome, quantidade) => {
+        // Use a URL base + a rota POST: /api/itens
+        axios.post(`${API_BASE_URL}/api/itens`, { nome, quantidade }) 
+            .then(() => fetchItens())
+            // ... (restante da função)
+    };
+
+    // ... (Faça o mesmo ajuste nas funções REMOVER e ATUALIZAR)
+    // ... (Ex: axios.delete(`${API_BASE_URL}/api/itens/${id}`))
+
+    // ... (Restante do código)
+}
 // VOCÊ TERÁ QUE MUDAR ISSO PARA: 'https://seubackend.up.railway.app/api/itens'
 
       function App() {
