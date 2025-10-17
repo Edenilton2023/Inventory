@@ -13,16 +13,18 @@ const PORT = process.env.PORT || 3001;
 
 // --- Configuração da Conexão com o MySQL ---
 const db = mysql.createConnection({
-    // Usa o valor injetado PELO RAILWAY, ou 'mysql' como fallback
-    host: process.env.MYSQLHOST || 'mysql', 
-    
-    // As outras variáveis permanecem lendo o que o Railway injeta
+    // 🚨 ATENÇÃO: Usamos o nome de serviço 'mysql' para o host.
+    // O Railway resolve o nome 'mysql' automaticamente na rede interna.
+    host: 'mysql', 
+
+    // As credenciais de usuário/senha devem ser injetadas,
+    // mas vamos simplificar o resto, removendo o fallback de porta.
     user: process.env.MYSQLUSER, 
     password: process.env.MYSQLPASSWORD, 
     database: process.env.MYSQLDATABASE,
     
-    // Usa o valor injetado PELO RAILWAY, ou 3306 como fallback (essencial para rede interna)
-    port: process.env.MYSQLPORT || 3306,
+    // Forçar a porta padrão do MySQL. Isso é fundamental.
+    port: 3306 
 });
 
 // Testa a conexão ao iniciar o servidor
