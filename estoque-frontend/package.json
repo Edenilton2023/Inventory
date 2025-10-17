@@ -1,6 +1,6 @@
 {
   "name": "estoque-frontend",
-  "private": true,
+  "private": "true",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -8,9 +8,8 @@
     "build": "vite build",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    
-    // 🚨 NOVO SCRIPT CRÍTICO PARA PRODUÇÃO
-    "start": "npm run build && npm run preview" 
+
+    "start": "npm run build && npm run preview"
 },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.14",
