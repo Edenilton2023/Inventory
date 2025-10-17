@@ -13,15 +13,16 @@ const PORT = process.env.PORT || 3001;
 
 // --- Configuração da Conexão com o MySQL ---
 const db = mysql.createConnection({
-    // 🚨 Host: 'mysql' é o nome de rede interna que o Railway usa em produção.
-    // Isso resolve o erro de host inacessível.
+    // Usa o valor injetado PELO RAILWAY, ou 'mysql' como fallback
     host: process.env.MYSQLHOST || 'mysql', 
     
-    // As credenciais são lidas das variáveis de ambiente injetadas pelo Railway
+    // As outras variáveis permanecem lendo o que o Railway injeta
     user: process.env.MYSQLUSER, 
     password: process.env.MYSQLPASSWORD, 
     database: process.env.MYSQLDATABASE,
-    port: process.env.MYSQLPORT 
+    
+    // Usa o valor injetado PELO RAILWAY, ou 3306 como fallback (essencial para rede interna)
+    port: process.env.MYSQLPORT || 3306,
 });
 
 // Testa a conexão ao iniciar o servidor
