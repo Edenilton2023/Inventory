@@ -7,7 +7,7 @@ import './index.css';
 
 // 🚨 URL BASE DA API EM PRODUÇÃO: Você precisa substituir este valor!
 // Exemplo: 'https://nodejs-production-67f4.up.railway.app'
-const API_BASE_URL = 'https://[DOMINIO_DO_SEU_BACKEND_AQUI]'; 
+const API_BASE_URL = 'https://nodejs-production-67f4.up.railway.app'; 
 
 
 function App() {
