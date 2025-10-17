@@ -35,7 +35,7 @@ function App() {
         fetchItens();
     }, []);
 
-    // Função para Adicionar Item (CREATE)
+    // Função para Adicionar I tem (CREATE)
     const adicionarItem = (nome, quantidade) => {
         // Envia POST para a rota /api/itens
         axios.post(`${API_BASE_URL}/api/itens`, { nome, quantidade }) 
