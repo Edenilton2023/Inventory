@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     
-    // 🚨 SCRIPT DE INÍCIO DEFINITIVO PARA PRODUÇÃO
+  
     "start": "npx serve -s dist -l $PORT" 
 },
   "dependencies": {

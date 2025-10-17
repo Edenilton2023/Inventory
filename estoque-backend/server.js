@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 3001;
 const db = mysql.createConnection({
     // 🚨 ATENÇÃO: Usamos o nome de serviço 'mysql' para o host.
     // O Railway resolve o nome 'mysql' automaticamente na rede interna.
-    host: 'mysql', 
+    host: 'mysql',
 
     // As credenciais de usuário/senha devem ser injetadas,
     // mas vamos simplificar o resto, removendo o fallback de porta.
