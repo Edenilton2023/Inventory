@@ -12,19 +12,17 @@ const app = express();
 const PORT = process.env.PORT || 3001;     
 
 // --- Configuração da Conexão com o MySQL ---
-const db = mysql.createConnection({
-    // 🚨 ATENÇÃO: Usamos o nome de serviço 'mysql' para o host.
-    // O Railway resolve o nome 'mysql' automaticamente na rede interna.
-    host: 'mysql',
+// dotenv.config(); 
 
-    // As credenciais de usuário/senha devem ser injetadas,
-    // mas vamos simplificar o resto, removendo o fallback de porta.
+const db = mysql.createConnection({
+    // Host e porta fixos (Correto)
+    host: 'mysql', 
+    port: 3306,
+    
+    // Credenciais: Não use fallbacks, apenas as variáveis que o Railway injeta
     user: process.env.MYSQLUSER, 
     password: process.env.MYSQLPASSWORD, 
-    database: process.env.MYSQLDATABASE,
-    
-    // Forçar a porta padrão do MySQL. Isso é fundamental.
-    port: 3306 
+    database: process.env.MYSQLDATABASE 
 });
 
 // Testa a conexão ao iniciar o servidor
